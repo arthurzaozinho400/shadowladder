@@ -161,16 +161,7 @@ export default function RootLayout({ children }) {
                 ))}
               </nav>
               <div className="sidebar-bottom">
-                <div className="user-tile">
-                  <div className="avatar">
-                    <Shield size={16} />
-                  </div>
-                  <div>
-                    <div className="user-name-sm">Dashboard</div>
-                    <div className="user-role-sm">Shadow Ladder</div>
-                  </div>
-                  <div className="status-dot" />
-                </div>
+                <SidebarTierInfo data={data} />
               </div>
             </aside>
             <div className="main">
@@ -196,5 +187,44 @@ export default function RootLayout({ children }) {
         </body>
       </html>
     </AppContext.Provider>
+  )
+}
+
+function SidebarTierInfo({ data }) {
+  const users = data.users || []
+  const htModes = {}
+  const ltModes = {}
+  for (const u of users) {
+    const mode = u.best_mode || 'N/A'
+    if (u.best_tier?.startsWith('HT')) {
+      htModes[mode] = (htModes[mode] || 0) + 1
+    } else if (u.best_tier?.startsWith('LT')) {
+      ltModes[mode] = (ltModes[mode] || 0) + 1
+    }
+  }
+
+  return (
+    <div className="tier-summary">
+      <div className="tier-summary-row">
+        <span className="tier-summary-label">HT</span>
+        <span className="tier-summary-count">{Object.values(htModes).reduce((a, b) => a + b, 0)}</span>
+      </div>
+      <div className="tier-summary-modes">
+        {Object.entries(htModes).sort((a, b) => b[1] - a[1]).map(([mode, count]) => (
+          <span key={mode} className="tier-summary-chip ht">{mode} {count}</span>
+        ))}
+        {!Object.keys(htModes).length && <span className="tier-summary-chip">—</span>}
+      </div>
+      <div className="tier-summary-row lt">
+        <span className="tier-summary-label">LT</span>
+        <span className="tier-summary-count">{Object.values(ltModes).reduce((a, b) => a + b, 0)}</span>
+      </div>
+      <div className="tier-summary-modes">
+        {Object.entries(ltModes).sort((a, b) => b[1] - a[1]).map(([mode, count]) => (
+          <span key={mode} className="tier-summary-chip lt">{mode} {count}</span>
+        ))}
+        {!Object.keys(ltModes).length && <span className="tier-summary-chip">—</span>}
+      </div>
+    </div>
   )
 }
