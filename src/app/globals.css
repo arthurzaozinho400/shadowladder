@@ -16,6 +16,41 @@
   --text: #1a1a2e; --text2: #6060a0; --text3: #9090b8;
 }
 
+.light body,
+body.light {
+  background: #f5f0ff;
+}
+
+.light .bg-layer {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 30%, #e8d8ff 0%, transparent 60%),
+    radial-gradient(ellipse 100% 80% at 50% 100%, #f0e8ff 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 30% 20%, #ddd0f5 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 70% 15%, #e8ddf5 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 80% 60%, #f0eaff 0%, transparent 40%),
+    linear-gradient(160deg, #f5f0ff 0%, #f0e8ff 25%, #ede0ff 50%, #f5f0ff 75%, #faf5ff 100%);
+}
+
+.light .star {
+  background: rgba(100, 60, 180, 0.15);
+}
+
+.light .nebula-1 {
+  background: radial-gradient(ellipse at 60% 40%, rgba(180, 120, 255, 0.15) 0%, transparent 60%);
+}
+
+.light .nebula-2 {
+  background: radial-gradient(ellipse at 40% 60%, rgba(150, 80, 220, 0.1) 0%, transparent 50%);
+}
+
+.light .nebula-3 {
+  background: radial-gradient(ellipse at 50% 50%, rgba(200, 150, 255, 0.06) 0%, transparent 50%);
+}
+
+.light .nebula-4 {
+  background: radial-gradient(ellipse at 50% 50%, rgba(180, 130, 255, 0.04) 0%, transparent 50%);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -721,6 +756,88 @@ tbody td {
 }
 
 .toggle.on::after { transform: translateX(18px); }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; animation: fadeIn 0.2s ease;
+}
+
+.light .modal-overlay {
+  background: rgba(0,0,0,0.2);
+}
+
+.modal {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; max-width: 440px; width: 100%;
+  position: relative; overflow: hidden;
+  animation: fadeIn 0.25s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.modal-close {
+  position: absolute; top: 12px; right: 12px; z-index: 1;
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg3);
+  color: var(--text2); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+
+.modal-close:hover { background: var(--red2); color: var(--red); border-color: transparent; }
+
+.modal-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 24px 24px 0;
+}
+
+.modal-head {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 2px solid var(--purple); background: var(--bg4);
+}
+
+.modal-name {
+  font-family: 'Rajdhani', sans-serif; font-size: 22px;
+  font-weight: 700; line-height: 1.2;
+}
+
+.modal-discord {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: #5865F2; font-size: 13px; font-weight: 600;
+  margin-top: 4px; font-family: 'Rajdhani', sans-serif;
+}
+
+.modal-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  padding: 20px 24px;
+}
+
+.modal-stat {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; border-radius: 10px;
+  background: var(--bg3);
+}
+
+.modal-stat-label {
+  font-size: 10px; color: var(--text3); text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 2px;
+}
+
+.modal-stat-value {
+  font-family: 'Rajdhani', sans-serif; font-size: 16px;
+  font-weight: 700;
+}
+
+.modal-skin {
+  display: flex; justify-content: center; padding: 0 24px 24px;
+}
+
+.modal-skin img {
+  height: 120px; image-rendering: pixelated;
+  animation: walkCycle 2.2s ease-in-out infinite;
+}
 
 /* ===== LOADING ===== */
 .loading {

@@ -1,7 +1,7 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useApp } from './layout'
-import { Heart, ArrowRightLeft, X, Shield } from 'lucide-react'
+import { Heart, ArrowRightLeft, X, Shield, Trophy, MapPin, Clock, Gamepad2 } from 'lucide-react'
 import { getMcHeadUrl, getMcBodyUrl } from '../lib/data'
 
 const TIERS = ['LT5', 'LT4', 'LT3', 'LT2', 'LT1', 'HT5', 'HT4', 'HT3', 'HT2', 'HT1']
@@ -19,6 +19,7 @@ export default function PlayersPage() {
   const [favorites, setFavorites] = useState([])
   const [compare, setCompare] = useState([])
   const [page, setPage] = useState(1)
+  const [selectedPlayer, setSelectedPlayer] = useState(null)
   const perPage = 25
 
   const list = useMemo(() => {
@@ -53,6 +54,13 @@ export default function PlayersPage() {
       return [...prev, id]
     })
   }
+
+  useEffect(() => {
+    if (!selectedPlayer) return
+    const handler = (e) => { if (e.key === 'Escape') setSelectedPlayer(null) }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [selectedPlayer])
 
   const compareData = compare.map(id => data.users.find(u => u.user_id === id)).filter(Boolean)
 
@@ -127,7 +135,10 @@ export default function PlayersPage() {
           const isFav = favorites.includes(p.user_id)
           const isComp = compare.includes(p.user_id)
           return (
-            <div key={p.user_id} className="player-card" style={{ paddingTop: 12 }}>
+            <div key={p.user_id} className="player-card" style={{ paddingTop: 12 }}
+              onClick={() => setSelectedPlayer(p)}
+              role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter') setSelectedPlayer(p) }}>
               {p.banner_url && (
                 <div className="player-card-banner" style={{ backgroundImage: `url(${p.banner_url})` }} />
               )}
@@ -146,7 +157,7 @@ export default function PlayersPage() {
                 <span className={`tier-badge ${TIER_CLASSES[p.best_tier] || 'tier-lt5'}`}>{p.best_tier}</span>
               </div>
               <span className="player-pts-val">{p.points} pts</span>
-              <div className="player-actions">
+              <div className="player-actions" onClick={(e) => e.stopPropagation()}>
                 <button className={`player-action-btn ${isFav ? 'fav-active' : ''}`}
                   onClick={() => toggleFav(p.user_id)} title="Favoritar">
                   <Heart size={14} />
@@ -205,6 +216,66 @@ export default function PlayersPage() {
           <button className="page-btn" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}>
             <ChevronRight size={14} />
           </button>
+        </div>
+      )}
+
+      {selectedPlayer && (
+        <div className="modal-overlay" onClick={() => setSelectedPlayer(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSelectedPlayer(null)}><X size={18} /></button>
+
+            <div className="modal-header">
+              <img className="modal-head" src={getMcHeadUrl(selectedPlayer.nick_minecraft, 80)} alt="" />
+              <div>
+                <div className="modal-name">{selectedPlayer.nick_minecraft}</div>
+                <div className="modal-discord">
+                  <DiscordIcon size={14} /> @{selectedPlayer.user_id}
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-stats">
+              <div className="modal-stat">
+                <Trophy size={16} style={{ color: 'var(--gold)' }} />
+                <div>
+                  <div className="modal-stat-label">Pontos</div>
+                  <div className="modal-stat-value">{selectedPlayer.points} pts</div>
+                </div>
+              </div>
+              <div className="modal-stat">
+                <Shield size={16} style={{ color: 'var(--purple)' }} />
+                <div>
+                  <div className="modal-stat-label">Tier</div>
+                  <div><span className={`tier-badge ${TIER_CLASSES[selectedPlayer.best_tier] || 'tier-lt5'}`}>{selectedPlayer.best_tier}</span></div>
+                </div>
+              </div>
+              <div className="modal-stat">
+                <Gamepad2 size={16} style={{ color: 'var(--green)' }} />
+                <div>
+                  <div className="modal-stat-label">Melhor Modo</div>
+                  <div className="modal-stat-value">{selectedPlayer.best_mode}</div>
+                </div>
+              </div>
+              <div className="modal-stat">
+                <MapPin size={16} style={{ color: 'var(--blue)' }} />
+                <div>
+                  <div className="modal-stat-label">Região</div>
+                  <div><span className={`region region-${selectedPlayer.region?.toLowerCase()}`}>{selectedPlayer.region}</span></div>
+                </div>
+              </div>
+              <div className="modal-stat">
+                <Clock size={16} style={{ color: 'var(--text3)' }} />
+                <div>
+                  <div className="modal-stat-label">Registrado em</div>
+                  <div className="modal-stat-value">{new Date(selectedPlayer.registered_at).toLocaleDateString('pt-BR')}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-skin">
+              <img src={getMcBodyUrl(selectedPlayer.nick_minecraft)} alt="" />
+            </div>
+          </div>
         </div>
       )}
     </>

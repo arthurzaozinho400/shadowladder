@@ -47,11 +47,14 @@ export default function RootLayout({ children }) {
     let frame
     function drawStars(t) {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const isLight = document.body.classList.contains('light')
       for (const s of stars) {
         const alpha = s.a * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase))
         ctx.beginPath()
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
-        if (s.hue > 0) {
+        if (isLight) {
+          ctx.fillStyle = `rgba(80, 50, 140, ${alpha * 0.3})`
+        } else if (s.hue > 0) {
           ctx.fillStyle = `hsla(${s.hue}, 60%, 80%, ${alpha})`
         } else {
           ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`
