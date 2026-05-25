@@ -443,6 +443,20 @@ tbody td {
 .top-discord-name { font-weight: 700; font-size: 13px; }
 .top-discord-label { font-size: 11px; color: var(--text3); }
 
+.discord-tag-sm {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; color: #5865F2; font-weight: 600;
+  font-family: 'Rajdhani', sans-serif; margin-top: 2px;
+}
+
+.discord-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 6px; border-radius: 4px;
+  background: rgba(88,101,242,0.15); color: #5865F2;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.04em;
+  font-family: 'Rajdhani', sans-serif; white-space: nowrap;
+}
+
 .top-dots {
   display: flex; justify-content: center; gap: 8px; margin-top: 14px;
 }
@@ -530,10 +544,27 @@ tbody td {
   width: calc(100% + 24px);
 }
 
+.player-card-head-wrap {
+  position: relative; margin-bottom: 8px;
+}
+
 .player-mc-head {
   width: 48px; height: 48px; border-radius: 50%;
-  border: 2px solid var(--border2); margin-bottom: 8px;
-  background: var(--bg4);
+  border: 2px solid var(--border2); background: var(--bg4);
+}
+
+.player-discord-badge {
+  position: absolute; bottom: -2px; right: -2px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #5865F2; border: 2px solid var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; box-shadow: 0 0 6px rgba(88,101,242,0.4);
+}
+
+.player-discord-tag {
+  font-size: 10px; color: #5865F2; margin-bottom: 4px;
+  font-family: 'Rajdhani', sans-serif; font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .player-skin-wrap {
