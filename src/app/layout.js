@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
-import { Home, Users, List, Settings as SettingsIcon, Sword, Shield } from 'lucide-react'
+import { Home, Users, List, Settings as SettingsIcon, Shield } from 'lucide-react'
 import './globals.css'
 
 const AppContext = createContext()
@@ -142,13 +142,8 @@ export default function RootLayout({ children }) {
             <div className={`sidebar-overlay ${mobileOpen ? 'open' : ''}`} onClick={() => setMobileOpen(false)} />
             <aside className={`sidebar ${mobileOpen ? 'mobile-open' : ''}`}>
               <div className="sidebar-logo">
-                <div className="sidebar-logo-icon">
-                  <Sword size={18} />
-                </div>
-                <div>
-                  <div className="sidebar-logo-text">Shadow Ladder</div>
-                  <div className="sidebar-logo-ver">v3.0 · Dashboard</div>
-                </div>
+                <img src="/logo.png" alt="Shadow Ladder" className="sidebar-logo-img" />
+                <div className="sidebar-logo-text">Shadow Ladder</div>
               </div>
               <nav className="sidebar-nav">
                 {sections.map(section => (
