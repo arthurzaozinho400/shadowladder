@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, createContext, useContext } from 'react'
+import { useState, useEffect, useRef, createContext, useContext } from 'react'
 import { Home, Users, List, Settings as SettingsIcon, Sword, Shield } from 'lucide-react'
 import './globals.css'
 
@@ -10,11 +10,100 @@ export default function RootLayout({ children }) {
   const [page, setPage] = useState('home')
   const [theme, setTheme] = useState('dark')
   const [data, setData] = useState({ stats: null, users: [], queues: [], matches: [] })
+  const starsRef = useRef(null)
+  const particlesRef = useRef(null)
 
   useEffect(() => {
     document.body.className = theme === 'light' ? 'light' : ''
     window.__goPage = setPage
   }, [theme])
+
+  useEffect(() => {
+    const canvas = starsRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+
+    function resize() {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    const stars = []
+    for (let i = 0; i < 400; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2.5 + 0.3,
+        a: Math.random() * 0.8 + 0.2,
+        speed: 0.005 + Math.random() * 0.02,
+        phase: Math.random() * Math.PI * 2,
+        hue: Math.random() > 0.7 ? 270 + Math.random() * 40 : 0,
+      })
+    }
+
+    let frame
+    function drawStars(t) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      for (const s of stars) {
+        const alpha = s.a * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase))
+        ctx.beginPath()
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
+        if (s.hue > 0) {
+          ctx.fillStyle = `hsla(${s.hue}, 60%, 80%, ${alpha})`
+        } else {
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`
+        }
+        ctx.fill()
+      }
+      frame = requestAnimationFrame(drawStars)
+    }
+    drawStars(0)
+
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('resize', resize)
+    }
+  }, [])
+
+  useEffect(() => {
+    const layer = document.getElementById('bg-stars-layer')
+    if (layer) {
+      for (let i = 0; i < 300; i++) {
+        const el = document.createElement('div')
+        el.className = 'star'
+        const size = Math.random() * 2 + 0.5
+        el.style.cssText = `
+          width: ${size}px; height: ${size}px;
+          top: ${Math.random() * 100}%; left: ${Math.random() * 100}%;
+          opacity: ${Math.random() * 0.6 + 0.1};
+          background: ${Math.random() > 0.7 ? 'rgba(200,160,255,0.6)' : 'rgba(255,255,255,0.5)'};
+          box-shadow: 0 0 ${size * 2}px rgba(200,160,255,${Math.random() * 0.2});
+        `
+        layer.appendChild(el)
+      }
+    }
+
+    const container = particlesRef.current
+    if (!container) return
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div')
+      p.className = 'bg-particle'
+      const size = Math.random() * 3 + 1
+      const x = Math.random() * 100
+      const delay = Math.random() * 8
+      const dur = 8 + Math.random() * 12
+      p.style.cssText = `
+        width: ${size}px; height: ${size}px;
+        left: ${x}%; bottom: -10px;
+        animation-delay: ${delay}s; animation-duration: ${dur}s;
+        opacity: ${Math.random() * 0.3};
+        background: rgba(${180 + Math.random() * 75}, ${60 + Math.random() * 100}, 255, ${Math.random() * 0.2 + 0.1});
+      `
+      container.appendChild(p)
+    }
+  }, [])
 
   const pages = [
     { key: 'home', label: 'Início', icon: Home, section: 'Principal' },
@@ -34,6 +123,17 @@ export default function RootLayout({ children }) {
           <title>Shadow Ladder</title>
         </head>
         <body>
+          <div className="bg-layer">
+            <canvas ref={starsRef} id="bg-stars"></canvas>
+            <div className="nebula">
+              <div className="nebula-1"></div>
+              <div className="nebula-2"></div>
+              <div className="nebula-3"></div>
+              <div className="nebula-4"></div>
+            </div>
+            <div className="stars-layer" id="bg-stars-layer"></div>
+            <div ref={particlesRef} id="bg-particles"></div>
+          </div>
           <div className="app">
             <aside className="sidebar">
               <div className="sidebar-logo">
