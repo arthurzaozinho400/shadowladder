@@ -785,24 +785,42 @@ tbody td {
 .modal-close:hover { background: var(--red2); color: var(--red); border-color: transparent; }
 
 .modal-header {
-  display: flex; align-items: center; gap: 16px;
+  display: flex; align-items: center; justify-content: center; gap: 24px;
   padding: 24px 24px 0;
 }
 
+.modal-profile-col {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  flex: 1;
+}
+
+.modal-profile-divider {
+  width: 1px; height: 80px;
+  background: var(--border); flex-shrink: 0;
+}
+
 .modal-head {
-  width: 64px; height: 64px; border-radius: 50%;
+  width: 56px; height: 56px; border-radius: 50%;
   border: 2px solid var(--purple); background: var(--bg4);
 }
 
-.modal-name {
-  font-family: 'Rajdhani', sans-serif; font-size: 22px;
-  font-weight: 700; line-height: 1.2;
+.modal-head.discord {
+  border-color: #5865F2;
 }
 
-.modal-discord {
-  display: inline-flex; align-items: center; gap: 6px;
-  color: #5865F2; font-size: 13px; font-weight: 600;
-  margin-top: 4px; font-family: 'Rajdhani', sans-serif;
+.modal-profile-label {
+  font-size: 9px; color: var(--text3); text-transform: uppercase;
+  letter-spacing: 0.08em; font-weight: 600;
+}
+
+.modal-name {
+  font-family: 'Rajdhani', sans-serif; font-size: 16px;
+  font-weight: 700; line-height: 1.2; text-align: center;
+}
+
+.modal-discord-name {
+  font-size: 13px; color: #5865F2; font-weight: 600;
+  font-family: 'Rajdhani', sans-serif; text-align: center;
 }
 
 .modal-section {

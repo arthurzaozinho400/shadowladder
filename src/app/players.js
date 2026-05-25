@@ -230,12 +230,16 @@ export default function PlayersPage() {
             <button className="modal-close" onClick={() => setSelectedPlayer(null)}><X size={18} /></button>
 
             <div className="modal-header">
-              <img className="modal-head" src={getMcHeadUrl(selectedPlayer.nick_minecraft, 80)} alt="" />
-              <div>
+              <div className="modal-profile-col">
+                <img className="modal-head" src={getMcHeadUrl(selectedPlayer.nick_minecraft, 64)} alt="" />
+                <div className="modal-profile-label">Minecraft</div>
                 <div className="modal-name">{selectedPlayer.nick_minecraft}</div>
-                <div className="modal-discord">
-                  <DiscordIcon size={14} /> @{selectedPlayer.user_id}
-                </div>
+              </div>
+              <div className="modal-profile-divider" />
+              <div className="modal-profile-col">
+                <img className="modal-head discord" src={getDiscordAvatar(selectedPlayer.user_id)} alt="" />
+                <div className="modal-profile-label">Discord</div>
+                <div className="modal-discord-name">@{selectedPlayer.user_id}</div>
               </div>
             </div>
 
@@ -276,6 +280,11 @@ export default function PlayersPage() {
       )}
     </>
   )
+}
+
+function getDiscordAvatar(userId) {
+  const index = (BigInt(userId) >> 22n) % 6n
+  return `https://cdn.discordapp.com/embed/avatars/${index}.png`
 }
 
 function DiscordIcon({ size }) {
