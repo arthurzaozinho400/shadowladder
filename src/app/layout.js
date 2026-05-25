@@ -10,6 +10,7 @@ export default function RootLayout({ children }) {
   const [page, setPage] = useState('home')
   const [theme, setTheme] = useState('dark')
   const [data, setData] = useState({ stats: null, users: [], queues: [], matches: [] })
+  const [mobileOpen, setMobileOpen] = useState(false)
   const starsRef = useRef(null)
   const particlesRef = useRef(null)
 
@@ -135,7 +136,8 @@ export default function RootLayout({ children }) {
             <div ref={particlesRef} id="bg-particles"></div>
           </div>
           <div className="app">
-            <aside className="sidebar">
+            <div className={`sidebar-overlay ${mobileOpen ? 'open' : ''}`} onClick={() => setMobileOpen(false)} />
+            <aside className={`sidebar ${mobileOpen ? 'mobile-open' : ''}`}>
               <div className="sidebar-logo">
                 <div className="sidebar-logo-icon">
                   <Sword size={18} />
@@ -152,7 +154,7 @@ export default function RootLayout({ children }) {
                     {pages.filter(p => p.section === section).map(p => (
                       <button key={p.key}
                         className={`nav-btn ${page === p.key ? 'active' : ''}`}
-                        onClick={() => setPage(p.key)}>
+                        onClick={() => { setPage(p.key); setMobileOpen(false) }}>
                         <p.icon size={18} />
                         {p.label}
                       </button>
@@ -175,6 +177,9 @@ export default function RootLayout({ children }) {
             </aside>
             <div className="main">
               <div className="topbar">
+                <button className="hamburger" onClick={() => setMobileOpen(o => !o)} aria-label="Menu">
+                  <span /><span /><span />
+                </button>
                 <span className="page-title">
                   {{ home: 'Início', players: 'Jogadores', queues: 'Filas', settings: 'Configurações' }[page]}
                 </span>

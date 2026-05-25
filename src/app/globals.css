@@ -509,7 +509,7 @@ tbody td {
 }
 
 .players-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
 }
 
 .player-card {
@@ -700,15 +700,74 @@ tbody td {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1200px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .players-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .players-grid { grid-template-columns: repeat(4, 1fr); }
   .bottom-grid { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 900px) {
+  .players-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .players-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== HAMBURGER ===== */
+.hamburger {
+  display: none; flex-direction: column; gap: 4px;
+  background: none; border: none; cursor: pointer;
+  padding: 4px; flex-shrink: 0;
+}
+
+.hamburger span {
+  display: block; width: 20px; height: 2px;
+  background: var(--text2); border-radius: 2px;
+  transition: all 0.2s;
+}
+
+/* ===== SIDEBAR OVERLAY ===== */
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 99;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+
+.sidebar-overlay.open {
+  opacity: 1; pointer-events: auto;
+}
+
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
-  .sidebar { display: none; }
+  .hamburger { display: flex; }
+
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+    transform: translateX(-100%); transition: transform 0.3s ease;
+    width: 260px;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay { display: block; }
+
+  .sidebar-logo-ver { font-size: 10px; color: var(--text3); }
+
+  .content { padding: 12px; }
+
   .stats-grid { grid-template-columns: 1fr; }
   .queue-grid { grid-template-columns: 1fr; }
   .tier-cards { grid-template-columns: repeat(3, 1fr); }
   .players-toolbar { flex-direction: column; align-items: flex-start; }
+  .players-toolbar-actions { width: 100%; }
   .search-wrap { width: 100%; }
+  .select-field { flex: 1; min-width: 0; }
+  .bottom-grid { grid-template-columns: 1fr; }
+  .stat-card { padding: 12px 14px; }
+  .stat-value { font-size: 24px; }
+  .top-card { flex-direction: column; align-items: center; }
+  .top-card-content { flex-direction: column; align-items: center; }
+  .top-card-right { margin-left: 0; }
+  .pagination { flex-wrap: wrap; }
 }

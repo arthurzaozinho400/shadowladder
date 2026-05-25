@@ -19,7 +19,7 @@ export default function PlayersPage() {
   const [favorites, setFavorites] = useState([])
   const [compare, setCompare] = useState([])
   const [page, setPage] = useState(1)
-  const perPage = 24
+  const perPage = 25
 
   const list = useMemo(() => {
     let arr = [...(data.users || [])]
