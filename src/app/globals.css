@@ -805,25 +805,52 @@ tbody td {
   margin-top: 4px; font-family: 'Rajdhani', sans-serif;
 }
 
-.modal-stats {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-  padding: 20px 24px;
+.modal-section {
+  padding: 12px 24px;
 }
 
-.modal-stat {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px; border-radius: 10px;
+.modal-section + .modal-section {
+  border-top: 1px solid var(--border);
+}
+
+.modal-section-title {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--text3); text-transform: uppercase;
+  letter-spacing: 0.06em; font-weight: 600; margin-bottom: 8px;
+}
+
+.modal-points {
+  font-family: 'Rajdhani', sans-serif; font-size: 28px;
+  font-weight: 700; color: var(--purple);
+}
+
+.modal-tier-grid {
+  display: flex; flex-direction: column; gap: 6px;
+}
+
+.modal-tier-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-radius: 8px;
   background: var(--bg3);
 }
 
-.modal-stat-label {
-  font-size: 10px; color: var(--text3); text-transform: uppercase;
-  letter-spacing: 0.06em; margin-bottom: 2px;
+.modal-mode-name {
+  font-weight: 600; font-size: 13px;
 }
 
-.modal-stat-value {
-  font-family: 'Rajdhani', sans-serif; font-size: 16px;
-  font-weight: 700;
+.modal-reg-date {
+  font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 600;
+}
+
+/* ===== MODE TIER MINI ON PLAYER CARDS ===== */
+.player-mode-tiers {
+  display: flex; gap: 4px; margin-bottom: 6px; flex-wrap: wrap; justify-content: center;
+}
+
+.mode-tier-mini {
+  font-size: 9px; padding: 1px 6px; border-radius: 4px;
+  font-weight: 700; font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.03em; opacity: 0.8;
 }
 
 .modal-skin {

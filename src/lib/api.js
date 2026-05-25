@@ -42,12 +42,16 @@ export async function loadStats() {
 export async function loadUsers() {
   const data = await query('players')
   if (!data) return null
-  return data.map(p => ({
-    user_id: p.user_id, nick_minecraft: p.nick, nick_discord: p.nick,
-    region: p.region, points: getTierPoints(p.results), registered_at: p.registered_at,
-    best_tier: getBestTier(p.results), best_mode: getBestMode(p.results),
-    banner_url: p.banner_url || '',
-  }))
+  return data.map(p => {
+    const results = parseResults(p.results)
+    return {
+      user_id: p.user_id, nick_minecraft: p.nick, nick_discord: p.nick,
+      region: p.region, points: getTierPoints(p.results), registered_at: p.registered_at,
+      best_tier: getBestTier(p.results), best_mode: getBestMode(p.results),
+      banner_url: p.banner_url || '',
+      tiers: results,
+    }
+  })
 }
 
 export async function loadQueues() {

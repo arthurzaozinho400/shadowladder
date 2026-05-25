@@ -153,6 +153,11 @@ export default function PlayersPage() {
               </div>
               <div className="player-name">{p.nick_minecraft}</div>
               <div className="player-discord-tag">@{p.user_id}</div>
+              <div className="player-mode-tiers">
+                {Object.entries(p.tiers || {}).sort((a, b) => TIERS.indexOf(b[1]) - TIERS.indexOf(a[1])).slice(0, 2).map(([mode, tier]) => (
+                  <span key={mode} className={`mode-tier-mini ${TIER_CLASSES[tier] || 'tier-lt5'}`}>{mode}</span>
+                ))}
+              </div>
               <div style={{ marginBottom: 4 }}>
                 <span className={`tier-badge ${TIER_CLASSES[p.best_tier] || 'tier-lt5'}`}>{p.best_tier}</span>
               </div>
@@ -234,42 +239,33 @@ export default function PlayersPage() {
               </div>
             </div>
 
-            <div className="modal-stats">
-              <div className="modal-stat">
-                <Trophy size={16} style={{ color: 'var(--gold)' }} />
-                <div>
-                  <div className="modal-stat-label">Pontos</div>
-                  <div className="modal-stat-value">{selectedPlayer.points} pts</div>
-                </div>
+            <div className="modal-section">
+              <div className="modal-section-title"><Trophy size={14} /> Pontos</div>
+              <div className="modal-points">{selectedPlayer.points} pts</div>
+            </div>
+
+            <div className="modal-section">
+              <div className="modal-section-title"><Shield size={14} /> Tiers por Modo</div>
+              <div className="modal-tier-grid">
+                {Object.entries(selectedPlayer.tiers || {})
+                  .sort((a, b) => TIERS.indexOf(b[1]) - TIERS.indexOf(a[1]))
+                  .map(([mode, tier]) => (
+                    <div key={mode} className="modal-tier-item">
+                      <span className="modal-mode-name">{mode}</span>
+                      <span className={`tier-badge ${TIER_CLASSES[tier] || 'tier-lt5'}`}>{tier}</span>
+                    </div>
+                  ))}
               </div>
-              <div className="modal-stat">
-                <Shield size={16} style={{ color: 'var(--purple)' }} />
-                <div>
-                  <div className="modal-stat-label">Tier</div>
-                  <div><span className={`tier-badge ${TIER_CLASSES[selectedPlayer.best_tier] || 'tier-lt5'}`}>{selectedPlayer.best_tier}</span></div>
-                </div>
-              </div>
-              <div className="modal-stat">
-                <Gamepad2 size={16} style={{ color: 'var(--green)' }} />
-                <div>
-                  <div className="modal-stat-label">Melhor Modo</div>
-                  <div className="modal-stat-value">{selectedPlayer.best_mode}</div>
-                </div>
-              </div>
-              <div className="modal-stat">
-                <MapPin size={16} style={{ color: 'var(--blue)' }} />
-                <div>
-                  <div className="modal-stat-label">Região</div>
-                  <div><span className={`region region-${selectedPlayer.region?.toLowerCase()}`}>{selectedPlayer.region}</span></div>
-                </div>
-              </div>
-              <div className="modal-stat">
-                <Clock size={16} style={{ color: 'var(--text3)' }} />
-                <div>
-                  <div className="modal-stat-label">Registrado em</div>
-                  <div className="modal-stat-value">{new Date(selectedPlayer.registered_at).toLocaleDateString('pt-BR')}</div>
-                </div>
-              </div>
+            </div>
+
+            <div className="modal-section">
+              <div className="modal-section-title"><MapPin size={14} /> Região</div>
+              <div><span className={`region region-${selectedPlayer.region?.toLowerCase()}`}>{selectedPlayer.region}</span></div>
+            </div>
+
+            <div className="modal-section">
+              <div className="modal-section-title"><Clock size={14} /> Registrado em</div>
+              <div className="modal-reg-date">{new Date(selectedPlayer.registered_at).toLocaleDateString('pt-BR')}</div>
             </div>
 
             <div className="modal-skin">
