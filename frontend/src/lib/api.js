@@ -2,7 +2,7 @@ import { supabase } from './supabase'
 import { parseResults, getTierPoints, getBestTier, getBestMode } from './data'
 
 const TABLE_COLUMNS = {
-  players: 'nick, user_id, region, results, registered_at, banner_url, discord_name',
+  players: 'nick, user_id, region, results, registered_at, banner_url',
   matches: '*',
   queues: '*',
 }
