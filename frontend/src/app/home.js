@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useApp } from './layout'
 import { Trophy, Users, Gamepad2, Target, Shield, ChevronLeft, ChevronRight } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { getMcHeadUrl, getMcBodyUrl, getInitials } from '../lib/data'
 
 const TIERS = ['LT5', 'LT4', 'LT3', 'LT2', 'LT1', 'HT5', 'HT4', 'HT3', 'HT2', 'HT1']
@@ -34,11 +33,6 @@ export default function HomePage() {
     const t = setInterval(nextSlide, 5500)
     return () => clearInterval(t)
   }, [topRanked.length, nextSlide])
-
-  const tierData = TIERS.map(t => ({
-    name: t, value: s?.tier_distribution?.[t] || 0,
-    fill: TIER_COLORS[t]?.bar || '#6b7280',
-  }))
 
   return (
     <>
@@ -176,19 +170,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="card" style={{ marginTop: 20 }}>
-        <div className="card-header">
-          <div className="card-title">Distribuição de Tiers</div>
-        </div>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={tierData}>
-            <XAxis dataKey="name" tick={{ fill: 'var(--text2)', fontSize: 12 }} />
-            <YAxis tick={{ fill: 'var(--text2)', fontSize: 12 }} />
-            <Tooltip contentStyle={{ background: 'var(--bg3)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text)' }} />
-            <Bar dataKey="value" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+
     </>
   )
 }
