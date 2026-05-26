@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
-import { Home, Users, List, Settings as SettingsIcon, Shield } from 'lucide-react'
+import { Home, Users, List, Settings as SettingsIcon } from 'lucide-react'
 import './globals.css'
 
 const AppContext = createContext()
@@ -16,7 +16,6 @@ export default function RootLayout({ children }) {
 
   useEffect(() => {
     document.body.className = theme === 'light' ? 'light' : ''
-    window.__goPage = setPage
   }, [theme])
 
   useEffect(() => {
@@ -161,16 +160,15 @@ export default function RootLayout({ children }) {
                 ))}
               </nav>
               <div className="sidebar-bottom">
-                <div className="user-tile">
-                  <div className="avatar">
-                    <Shield size={16} />
-                  </div>
-                  <div>
-                    <div className="user-name-sm">Dashboard</div>
-                    <div className="user-role-sm">Shadow Ladder</div>
-                  </div>
-                  <div className="status-dot" />
-                </div>
+                <button
+                  className={`icon-btn sidebar-theme-btn ${theme === 'light' ? 'active' : ''}`}
+                  onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+                  title="Alternar tema">
+                  {theme === 'dark' ?
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> :
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>}
+                  <span style={{ fontSize: 13, fontWeight: 500 }}>{theme === 'dark' ? 'Tema Claro' : 'Tema Escuro'}</span>
+                </button>
               </div>
             </aside>
             <div className="main">
@@ -181,14 +179,7 @@ export default function RootLayout({ children }) {
                 <span className="page-title">
                   {{ home: 'Início', players: 'Jogadores', queues: 'Filas', settings: 'Configurações' }[page]}
                 </span>
-                <button
-                  className={`icon-btn ${theme === 'light' ? 'active' : ''}`}
-                  onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
-                  title="Alternar tema"
-                  style={{ width: 36, height: 36 }}>
-                  {theme === 'dark' ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> :
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>}
-                </button>
+                
               </div>
               <div className="content">{children}</div>
             </div>

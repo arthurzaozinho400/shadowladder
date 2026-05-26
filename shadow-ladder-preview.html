@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>Shadow Ladder — Preview</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0615;
+  overflow: hidden;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+canvas#stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.artboard {
+  position: relative;
+  width: 1440px;
+  height: 810px;
+  max-width: 95vw;
+  max-height: 95vh;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 120px rgba(100, 30, 180, 0.4), 0 0 240px rgba(60, 10, 120, 0.2);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 30%, #1a0a30 0%, transparent 60%),
+    radial-gradient(ellipse 100% 80% at 50% 100%, #0d0520 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 30% 20%, #2d1060 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 70% 15%, #1f0840 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 80% 60%, #150830 0%, transparent 40%),
+    linear-gradient(160deg, #0d0520 0%, #160830 25%, #1a0a35 50%, #120628 75%, #080410 100%);
+}
+
+.nebula {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.nebula-1 {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 60%;
+  height: 70%;
+  background: radial-gradient(ellipse at 60% 40%, rgba(120, 40, 200, 0.25) 0%, transparent 60%);
+  filter: blur(60px);
+}
+
+.nebula-2 {
+  position: absolute;
+  bottom: -10%;
+  left: -5%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(ellipse at 40% 60%, rgba(80, 20, 160, 0.2) 0%, transparent 50%);
+  filter: blur(80px);
+}
+
+.nebula-3 {
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  width: 40%;
+  height: 40%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(150, 60, 255, 0.08) 0%, transparent 50%);
+  filter: blur(100px);
+}
+
+.nebula-4 {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  width: 30%;
+  height: 30%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(200, 100, 255, 0.06) 0%, transparent 50%);
+  filter: blur(80px);
+}
+
+/* Stars layer */
+.stars-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* Main content */
+.content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Neon sign container */
+.neon-sign {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+/* Glass tube glow behind */
+.neon-glow {
+  position: absolute;
+  inset: -40px -80px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(180, 60, 255, 0.3) 0%, rgba(120, 20, 200, 0.1) 40%, transparent 70%);
+  filter: blur(50px);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.neon-glow-2 {
+  position: absolute;
+  inset: -20px -40px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(220, 120, 255, 0.15) 0%, transparent 50%);
+  filter: blur(30px);
+  animation: pulse 4s ease-in-out infinite 2s;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Main neon text */
+.neon-text {
+  font-family: 'Brush Script MT', 'Segoe Script', 'Apple Chancery', 'Comic Sans MS', cursive;
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 0.9;
+  text-align: center;
+  color: #d080ff;
+  text-shadow:
+    0 0 7px #b060f0,
+    0 0 10px #b060f0,
+    0 0 21px #b060f0,
+    0 0 42px #9030d0,
+    0 0 82px #9030d0,
+    0 0 92px #9030d0,
+    0 0 102px #7010b0,
+    0 0 151px #7010b0;
+  animation: flicker 6s ease-in-out infinite;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+/* Glass tube overlay */
+.neon-tube {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Brush Script MT', 'Segoe Script', 'Apple Chancery', 'Comic Sans MS', cursive;
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 0.9;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(220, 170, 255, 0.3);
+  text-stroke: 2px rgba(220, 170, 255, 0.3);
+  pointer-events: none;
+  letter-spacing: 0.05em;
+}
+
+/* Individual letters with staggered animation */
+.letter-shadow, .letter-ladder {
+  display: inline-block;
+}
+
+.letter-shadow {
+  animation: flickerLetter 3s ease-in-out infinite;
+}
+
+.letter-ladder {
+  animation: flickerLetter 3s ease-in-out infinite 0.5s;
+}
+
+/* Bottom subtitle glow */
+.subtitle {
+  margin-top: 20px;
+  font-family: 'Georgia', serif;
+  font-size: clamp(14px, 1.8vw, 24px);
+  color: rgba(200, 160, 255, 0.5);
+  text-shadow: 0 0 20px rgba(150, 60, 255, 0.2);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+}
+
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes flickerLetter {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.7;
+  }
+}
+
+/* Glass reflection line */
+.sign-mount {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.mount-line {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(180, 130, 255, 0.3), transparent);
+  border-radius: 1px;
+}
+
+.mount-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(180, 130, 255, 0.4);
+  box-shadow: 0 0 10px rgba(150, 60, 255, 0.3);
+}
+
+/* Light rays from sign */
+.rays {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(180, 60, 255, 0.03) 0%, transparent 50%);
+}
+
+.rays::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(180, 60, 255, 0.015) 30deg,
+    transparent 60deg,
+    rgba(120, 30, 200, 0.01) 120deg,
+    transparent 180deg,
+    rgba(180, 60, 255, 0.015) 240deg,
+    transparent 300deg,
+    transparent 360deg
+  );
+  filter: blur(40px);
+}
+
+/* Floating particles */
+.particle {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 50%;
+  background: rgba(200, 150, 255, 0.3);
+  box-shadow: 0 0 4px rgba(180, 100, 255, 0.2);
+  animation: float linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-400px) translateX(100px); opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .artboard {
+    border-radius: 8px;
+  }
+  .neon-text {
+    font-size: clamp(50px, 15vw, 80px);
+  }
+  .neon-tube {
+    font-size: clamp(50px, 15vw, 80px);
+  }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="artboard">
+  <div class="nebula">
+    <div class="nebula-1"></div>
+    <div class="nebula-2"></div>
+    <div class="nebula-3"></div>
+    <div class="nebula-4"></div>
+  </div>
+
+  <div class="stars-layer" id="starsLayer"></div>
+
+  <div class="rays"></div>
+
+  <div class="content">
+    <div class="neon-sign">
+      <div class="neon-glow"></div>
+      <div class="neon-glow-2"></div>
+      <div class="neon-text">
+        <span class="letter-shadow">Shadow</span><br>
+        <span class="letter-ladder">Ladder</span>
+      </div>
+      <div class="neon-tube" aria-hidden="true">
+        <span>Shadow</span><br>
+        <span>Ladder</span>
+      </div>
+    </div>
+    <div class="sign-mount">
+      <div class="mount-line"></div>
+      <div class="mount-dot"></div>
+    </div>
+    <div class="subtitle">✦ Neon Luxe ✦</div>
+  </div>
+</div>
+
+<div id="particles"></div>
+
+<script>
+// Starfield
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const stars = [];
+const STAR_COUNT = 400;
+
+for (let i = 0; i < STAR_COUNT; i++) {
+  const size = Math.random() * 2.5 + 0.3;
+  const twinkle = Math.random() * Math.PI * 2;
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: size,
+    a: Math.random() * 0.8 + 0.2,
+    speed: 0.005 + Math.random() * 0.02,
+    phase: Math.random() * Math.PI * 2,
+    hue: Math.random() > 0.7 ? 270 + Math.random() * 40 : 0
+  });
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (const s of stars) {
+    const alpha = s.a * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    if (s.hue > 0) {
+      ctx.fillStyle = `hsla(${s.hue}, 60%, 80%, ${alpha})`;
+    } else {
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+    }
+    ctx.fill();
+  }
+  requestAnimationFrame(drawStars);
+}
+
+drawStars(0);
+
+// Static tiny stars in the artboard
+const layer = document.getElementById('starsLayer');
+for (let i = 0; i < 300; i++) {
+  const el = document.createElement('div');
+  el.className = 'star';
+  const size = Math.random() * 2 + 0.5;
+  el.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    top: ${Math.random() * 100}%;
+    left: ${Math.random() * 100}%;
+    opacity: ${Math.random() * 0.6 + 0.1};
+    background: ${Math.random() > 0.7 ? 'rgba(200,160,255,0.6)' : 'rgba(255,255,255,0.5)'};
+    box-shadow: 0 0 ${size * 2}px rgba(200,160,255,${Math.random() * 0.2});
+  `;
+  layer.appendChild(el);
+}
+
+// Floating particles
+const particlesContainer = document.getElementById('particles');
+for (let i = 0; i < 20; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 3 + 1;
+  const x = Math.random() * 100;
+  const delay = Math.random() * 8;
+  const dur = 8 + Math.random() * 12;
+  p.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    left: ${x}%;
+    bottom: -10px;
+    animation-delay: ${delay}s;
+    animation-duration: ${dur}s;
+    opacity: ${Math.random() * 0.3};
+    background: rgba(${180 + Math.random() * 75}, ${60 + Math.random() * 100}, 255, ${Math.random() * 0.2 + 0.1});
+  `;
+  particlesContainer.appendChild(p);
+}
+</script>
+</body>
+</html>

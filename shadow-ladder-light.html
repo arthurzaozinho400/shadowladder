@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>Shadow Ladder — Light</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f0fa;
+  overflow: hidden;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+canvas#dust {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.artboard {
+  position: relative;
+  width: 1440px;
+  height: 810px;
+  max-width: 95vw;
+  max-height: 95vh;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 0 60px rgba(180, 120, 255, 0.12),
+    0 0 120px rgba(140, 80, 220, 0.06),
+    inset 0 0 120px rgba(200, 170, 255, 0.04);
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 30%, #ede4f8 0%, transparent 60%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, #e8def5 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 30% 20%, #f0eaff 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 70% 15%, #eae0f5 0%, transparent 50%),
+    linear-gradient(160deg, #f8f4fe 0%, #f0eafa 30%, #ede4f5 50%, #f0eafa 75%, #f8f4fe 100%);
+}
+
+/* Ethereal haze */
+.haze {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.haze-1 {
+  position: absolute;
+  top: -5%;
+  right: -5%;
+  width: 55%;
+  height: 65%;
+  background: radial-gradient(ellipse at 60% 40%, rgba(200, 160, 255, 0.12) 0%, transparent 60%);
+  filter: blur(60px);
+}
+
+.haze-2 {
+  position: absolute;
+  bottom: -10%;
+  left: -5%;
+  width: 45%;
+  height: 45%;
+  background: radial-gradient(ellipse at 40% 60%, rgba(180, 130, 240, 0.10) 0%, transparent 50%);
+  filter: blur(80px);
+}
+
+.haze-3 {
+  position: absolute;
+  top: 25%;
+  left: 35%;
+  width: 35%;
+  height: 35%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(220, 190, 255, 0.06) 0%, transparent 50%);
+  filter: blur(100px);
+}
+
+/* Dust motes layer */
+.dust-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.mote {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(200, 170, 255, 0.5);
+}
+
+/* Main content */
+.content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Neon sign container */
+.neon-sign {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+/* Light version: subtle halo instead of glow */
+.neon-halo {
+  position: absolute;
+  inset: -40px -80px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(180, 100, 255, 0.08) 0%, rgba(140, 60, 220, 0.03) 40%, transparent 70%);
+  filter: blur(50px);
+  animation: breathe 5s ease-in-out infinite;
+}
+
+.neon-halo-2 {
+  position: absolute;
+  inset: -20px -40px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(200, 140, 255, 0.06) 0%, transparent 50%);
+  filter: blur(30px);
+  animation: breathe 5s ease-in-out infinite 2.5s;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+/* Main neon text — light version */
+.neon-text {
+  font-family: 'Brush Script MT', 'Segoe Script', 'Apple Chancery', 'Comic Sans MS', cursive;
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 0.9;
+  text-align: center;
+  color: #6a0dad;
+  text-shadow:
+    0 0 3px rgba(160, 80, 255, 0.2),
+    0 0 6px rgba(160, 80, 255, 0.15),
+    0 0 12px rgba(140, 50, 230, 0.1),
+    0 0 24px rgba(120, 30, 200, 0.08);
+  animation: shimmer 6s ease-in-out infinite;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+/* Glass tube overlay — visible on light bg */
+.neon-tube {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Brush Script MT', 'Segoe Script', 'Apple Chancery', 'Comic Sans MS', cursive;
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 0.9;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(120, 40, 200, 0.15);
+  pointer-events: none;
+  letter-spacing: 0.05em;
+}
+
+/* Individual letters */
+.letter-shadow, .letter-ladder {
+  display: inline-block;
+}
+
+.letter-shadow {
+  animation: shimmerLetter 3s ease-in-out infinite;
+}
+
+.letter-ladder {
+  animation: shimmerLetter 3s ease-in-out infinite 0.5s;
+}
+
+/* Subtitle */
+.subtitle {
+  margin-top: 20px;
+  font-family: 'Georgia', serif;
+  font-size: clamp(14px, 1.8vw, 24px);
+  color: rgba(100, 50, 180, 0.35);
+  text-shadow: 0 0 20px rgba(140, 80, 255, 0.08);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+}
+
+@keyframes shimmer {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.75;
+    filter: brightness(0.95);
+  }
+}
+
+@keyframes shimmerLetter {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.8;
+  }
+}
+
+/* Mount */
+.sign-mount {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.mount-line {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(120, 60, 200, 0.15), transparent);
+}
+
+.mount-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(120, 60, 200, 0.2);
+  box-shadow: 0 0 8px rgba(140, 80, 255, 0.1);
+}
+
+/* Soft rays */
+.rays {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(180, 100, 255, 0.015) 0%, transparent 50%);
+}
+
+.rays::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(180, 100, 255, 0.008) 30deg,
+    transparent 60deg,
+    rgba(140, 60, 220, 0.005) 120deg,
+    transparent 180deg,
+    rgba(180, 100, 255, 0.008) 240deg,
+    transparent 300deg,
+    transparent 360deg
+  );
+  filter: blur(40px);
+}
+
+/* Floating motes */
+.mote-particle {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 50%;
+  background: rgba(180, 130, 255, 0.2);
+  box-shadow: 0 0 4px rgba(180, 130, 255, 0.08);
+  animation: rise linear infinite;
+}
+
+@keyframes rise {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-400px) translateX(80px); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .artboard { border-radius: 8px; }
+  .neon-text { font-size: clamp(50px, 15vw, 80px); }
+  .neon-tube { font-size: clamp(50px, 15vw, 80px); }
+}
+</style>
+</head>
+<body>
+
+<canvas id="dust"></canvas>
+
+<div class="artboard">
+  <div class="haze">
+    <div class="haze-1"></div>
+    <div class="haze-2"></div>
+    <div class="haze-3"></div>
+  </div>
+
+  <div class="dust-layer" id="dustLayer"></div>
+  <div class="rays"></div>
+
+  <div class="content">
+    <div class="neon-sign">
+      <div class="neon-halo"></div>
+      <div class="neon-halo-2"></div>
+      <div class="neon-text">
+        <span class="letter-shadow">Shadow</span><br>
+        <span class="letter-ladder">Ladder</span>
+      </div>
+      <div class="neon-tube" aria-hidden="true">
+        <span>Shadow</span><br>
+        <span>Ladder</span>
+      </div>
+    </div>
+    <div class="sign-mount">
+      <div class="mount-line"></div>
+      <div class="mount-dot"></div>
+    </div>
+    <div class="subtitle">✦ Neon Luxe ✦</div>
+  </div>
+</div>
+
+<div id="motes"></div>
+
+<script>
+// Dust motes canvas
+const canvas = document.getElementById('dust');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const motes = [];
+const MOTE_COUNT = 200;
+
+for (let i = 0; i < MOTE_COUNT; i++) {
+  const size = Math.random() * 2 + 0.5;
+  motes.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: size,
+    a: Math.random() * 0.3 + 0.1,
+    speed: 0.003 + Math.random() * 0.01,
+    phase: Math.random() * Math.PI * 2,
+    driftX: (Math.random() - 0.5) * 0.2
+  });
+}
+
+function drawMotes(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (const m of motes) {
+    const alpha = m.a * (0.5 + 0.5 * Math.sin(t * m.speed + m.phase));
+    const dx = Math.sin(t * m.speed * 0.5 + m.phase) * m.driftX * 50;
+    ctx.beginPath();
+    ctx.arc(m.x + dx, m.y, m.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(160, 120, 220, ${alpha})`;
+    ctx.fill();
+  }
+  requestAnimationFrame(drawMotes);
+}
+
+drawMotes(0);
+
+// Static dust in artboard
+const layer = document.getElementById('dustLayer');
+for (let i = 0; i < 200; i++) {
+  const el = document.createElement('div');
+  el.className = 'mote';
+  const size = Math.random() * 1.8 + 0.3;
+  el.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    top: ${Math.random() * 100}%;
+    left: ${Math.random() * 100}%;
+    opacity: ${Math.random() * 0.3 + 0.05};
+    background: rgba(${180 + Math.random() * 70}, ${130 + Math.random() * 80}, 255, ${Math.random() * 0.2 + 0.05});
+  `;
+  layer.appendChild(el);
+}
+
+// Floating motes
+const motesContainer = document.getElementById('motes');
+for (let i = 0; i < 15; i++) {
+  const p = document.createElement('div');
+  p.className = 'mote-particle';
+  const size = Math.random() * 2.5 + 0.5;
+  const x = Math.random() * 100;
+  const delay = Math.random() * 10;
+  const dur = 12 + Math.random() * 16;
+  p.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    left: ${x}%;
+    bottom: -10px;
+    animation-delay: ${delay}s;
+    animation-duration: ${dur}s;
+    opacity: ${Math.random() * 0.2};
+    background: rgba(${160 + Math.random() * 95}, ${100 + Math.random() * 100}, 255, 0.1);
+  `;
+  motesContainer.appendChild(p);
+}
+</script>
+</body>
+</html>
