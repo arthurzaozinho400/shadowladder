@@ -300,6 +300,26 @@ async def open_ticket_slash_command(interaction: discord.Interaction):
     await create_new_ticket_logic(interaction)
 
 
+@bot.tree.command(name="sync", description="Sincroniza seu nick do Discord com sua conta Shadow Ladder.", guild=discord.Object(id=GUILD_ID))
+async def sync_discord_name(interaction: discord.Interaction):
+    await interaction.response.defer(ephemeral=True)
+    try:
+        result = supabase.table('players').upsert(
+            {'user_id': str(interaction.user.id), 'discord_name': interaction.user.name},
+            on_conflict='user_id'
+        ).execute()
+        if result.data:
+            await interaction.followup.send(
+                f"✅ Sincronizado! Seu Discord name `{interaction.user.name}` foi atualizado na sua conta.", ephemeral=True
+            )
+        else:
+            await interaction.followup.send(
+                "⚠️ Você não possui uma conta Shadow Ladder vinculada ainda. Abra um ticket para se cadastrar.", ephemeral=True
+            )
+    except Exception as e:
+        await interaction.followup.send(f"Erro ao sincronizar: {e}", ephemeral=True)
+
+
 @bot.event
 async def on_message(message: discord.Message):
     if message.author.bot:
